@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<template type="ProjTempl" version="1.0" supplier="SevenWatt.com"
+	revision="1.0" author="SevenWatt" copyright="Copyright (c) 2015 SevenWatt.com. License: MIT"
+	id="com.sevenwatt.templates.LPC8xxMulti" label="%LPC8xxMulti.CCtemplate.label"
+	description="%LPC8xxMulti.CCtemplate.description" help="help.html">
+
+	<property-group id="basics" label="%LPC8xxMulti.basics.label"
+		description="%LPC8xxMulti.basics.description" type="PAGES-ONLY" help="help.html">
+		<property id="author" label="%LPC8xxMulti.author.label"
+			description="%LPC8xxMulti.author.description" type="input" pattern=".*"
+			default="" hidden="false" persist="true" />
+		<property id="copyright" label="%LPC8xxMulti.copyright.label"
+			description="%LPC8xxMulti.copyright.description" type="input" pattern=".*"
+			default="%LPC8xxMulti.copyright.default" hidden="false" persist="true" />
+		<property id="message" label="%LPC8xxMulti.message.label"
+			description="%LPC8xxMulti.message.description" type="input" pattern=".*"
+			default="%LPC8xxMulti.message.default" hidden="false" persist="true" />
+		<property id="LPCType" label="%LPC8xxMulti.LPCType.label"
+			description="%LPC8xxMulti.LPCType.description" type="select" default="%LPC8xxMulti.LPCType.default"
+			hidden="false" mandatory="true" persist="true">
+			<item label="Pico Base LPC810 (4k/1k)" value="LPC810" />
+			<item label="Pico V2 LPC812 (16k/4k)" value="LPC812" />
+			<item label="Pico V3 LPC824 (32k/8k)" value="LPC824" />
+		</property>
+		<property id="selfcontained" label="%LPC8xxMulti.selfcontained.label"
+			description="%LPC8xxMulti.selfcontained.description" type="boolean" default="true"
+			hidden="true" persist="true" />
+	</property-group>
+
+	<property-group id="advanced" label="%LPC8xxMulti..advanced.label"
+		description="%LPC8xxMulti..advanced.description" type="PAGES-ONLY" help="help.html">
+		<property id="LibLoc" label="%LPC8xxMulti.LibLoc.label"
+			description="%LPC8xxMulti.LibLoc.descirption" type="select" default="%LPC8xxMulti.LibLoc.default"
+			hidden="false" mandatory="true" persist="true">
+			<item label="In project (local)" value="local" />
+			<item label="Embello project in workspace" value="project" />
+			<item label="Absolute path (e.g. to git)" value="path" />
+		</property>
+		<property id="embelloProj" label="%LPC8xxMulti.embelloProj.label"
+			description="%LPC8xxMulti.embelloProj.description" type="input" default="%LPC8xxMulti.embelloProj.default"
+			pattern="[\-:_a-zA-Z0-9\\\.@/]+" mandatory="true" persist="true" />
+		<property id="embelloLib" label="%LPC8xxMulti.embelloLib.label"
+			description="%LPC8xxMulti.embelloLib.description" type="browsedir" mandatory="false"
+			default="%LPC8xxMulti.embelloLib.default" persist="false" hidden="false" />
+		<property id="toolchain" label="%LPC8xxMulti.toolchain.label"
+			description="%LPC8xxMulti.toolchain.description" type="browsedir" pattern="[\-:_a-zA-Z0-9\\\.@/\s]+" 
+			mandatory="false" default="%LPC8xxMulti.toolchain.default" persist="false" />
+	</property-group>
+
+
+	<process type="org.eclipse.cdt.core.AddFiles">
+		<simple name="projectName" value="$(projectName)" />
+		<complex-array name="files">
+			<element>
+				<simple name="source" value="rf_ping.cpp" />
+				<simple name="target" value="$(projectName).cpp" />
+				<simple name="replaceable" value="true" />
+			</element>
+		</complex-array>
+	</process>
+
+	<if condition="$(LibLoc)==local" >
+		<process type="org.eclipse.cdt.core.AddFiles">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="files">
+				<element>
+					<simple name="source" value="Makefile-local.mk" />
+					<simple name="target" value="Makefile" />
+					<simple name="replaceable" value="true" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+	<if condition="$(LibLoc)==project" >
+		<process type="org.eclipse.cdt.core.AddFiles">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="files">
+				<element>
+					<simple name="source" value="Makefile-proj.mk" />
+					<simple name="target" value="Makefile" />
+					<simple name="replaceable" value="true" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+	<if condition="$(LibLoc)==path" >
+		<process type="org.eclipse.cdt.core.AddFiles">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="files">
+				<element>
+					<simple name="source" value="Makefile-path.mk" />
+					<simple name="target" value="Makefile" />
+					<simple name="replaceable" value="true" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+	
+	<!-- <process type="org.eclipse.cdt.core.Copy"> <complex-array name="files"> 
+		<element> <simple name="source" value="main.cpp" /> <simple name="target" 
+		value="$(location)/$(projectName)/main.cpp" /> <simple name="replaceable" 
+		value="true" /> </element> </complex-array> </process> -->
+
+	<!-- <if condition="$(selfcontained)==true"> -->
+	<if condition="$(LibLoc)==local">
+		<process type="com.sevenwatt.picos.templates.CopyFolders">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="folders">
+				<element>
+					<simple name="source" value="lib" />
+					<simple name="target" value="lib" />
+					<!-- <simple name="pattern" value=".*[.](h|txt)" /> -->
+					<simple name="pattern" value="" />
+					<simple name="replaceable" value="true" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+<!-- 
+	<process
+		type="org.eclipse.cdt.managedbuilder.gnu.ui.SimpleGNUMakefileGenerator">
+		<simple name="projectName" value="$(projectName)" />
+	</process>
+ -->
+	<process
+		type="org.eclipse.cdt.managedbuilder.core.AppendToMBSStringListOptionValues">
+		<simple name="projectName" value="$(projectName)" />
+		<complex-array name="resourcePaths">
+			<element>
+				<simple name="id"
+					value="org.eclipse.cdt.build.core.settings.holder.symbols" />
+				<simple-array name="values">
+					<element value="__GNUC__=1" />
+				</simple-array>
+				<simple name="path" value="" />
+			</element>
+		</complex-array>
+	</process>
+
+	<process
+		type="org.eclipse.cdt.managedbuilder.core.AppendToMBSStringListOptionValues">
+		<simple name="projectName" value="$(projectName)" />
+		<complex-array name="resourcePaths">
+			<element>
+				<simple name="id"
+					value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
+				<simple-array name="values">
+					<element value="&quot;$(toolchain)/include/&quot;" />
+				</simple-array>
+				<simple name="path" value="" />
+			</element>
+		</complex-array>
+	</process>
+
+	<!-- <if condition="$(selfcontained)==false"> -->
+	<if condition="$(LibLoc)==project">
+		<process
+			type="org.eclipse.cdt.managedbuilder.core.AppendToMBSStringListOptionValues">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="resourcePaths">
+				<element>
+					<simple name="id"
+						value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
+					<simple-array name="values">
+						<!-- When using an external (include/source) library: -->
+						<!-- <element value="&quot;C:\Github\embello\lib&quot;" /> -->
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/arch-lpc8xx}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/driver}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/sys-none}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/util}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor/lpcopen/inc}&quot;" />
+						<element value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor/lpcopen/src}&quot;" />
+						<!-- Path to (include/source) library is not required when in same project -->
+						<!-- Does not work within project -->
+						<!-- <element value="$(projectName)/lib/driver" /> <element value="/lib/driver" 
+							/> <element value="./lib/util" /> 
+						-->
+					</simple-array>
+					<simple name="path" value="" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+
+	<!-- <if condition="$(selfcontained)==false"> -->
+	<if condition="$(LibLoc)==path">
+		<process
+			type="org.eclipse.cdt.managedbuilder.core.AppendToMBSStringListOptionValues">
+			<simple name="projectName" value="$(projectName)" />
+			<complex-array name="resourcePaths">
+				<element>
+					<simple name="id"
+						value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
+					<simple-array name="values">
+						<!-- When using an external (include/source) library: -->
+						<element value="&quot;$(embelloLib)/arch-lpc8xx&quot;" />
+						<element value="&quot;$(embelloLib)/driver&quot;" />
+						<element value="&quot;$(embelloLib)/sys-none&quot;" />
+						<element value="&quot;$(embelloLib)/util&quot;" />
+						<element value="&quot;$(embelloLib)/vendor&quot;" />
+						<element value="&quot;$(embelloLib)/vendor/lpcopen/inc&quot;" />
+						<element value="&quot;$(embelloLib)/vendor/lpcopen/src&quot;" />
+					</simple-array>
+					<simple name="path" value="" />
+				</element>
+			</complex-array>
+		</process>
+	</if>
+
+	<process type="org.eclipse.cdt.ui.OpenFiles">
+		<simple name="projectName" value="$(projectName)" />
+		<complex-array name="files">
+			<element>
+				<simple name="target" value="$(projectName).cpp" />
+			</element>
+		</complex-array>
+	</process>
+
+
+
+</template>
+

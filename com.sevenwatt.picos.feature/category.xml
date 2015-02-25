@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/com.sevenwatt.picos.feature_1.0.0.qualifier.jar" id="com.sevenwatt.picos.feature" version="1.0.0.qualifier">
+      <category name="com.sevenwatt.picos.feature.category"/>
+   </feature>
+   <category-def name="com.sevenwatt.picos.feature.category" label="Picos ARM Tools"/>
+</site>

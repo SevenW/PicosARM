@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.cdt.core.templates">
+      <template
+            filterPattern=".*g\+\+"
+            id="com.sevenwatt.templates.LPC8xxHelloWorld"
+            location="templates/projecttemplates/LPC8xxHelloWorld/template.xml"
+            projectType="org.eclipse.cdt.build.makefile.projectType">
+      </template>
+      <template
+            id="com.sevenwatt.templates.LPC8xxMulti"
+            filterPattern=".*g\+\+"
+            location="templates/projecttemplates/LPC8xxMulti/template.xml"
+            projectType="org.eclipse.cdt.build.makefile.projectType">
+      </template>
+   </extension>
+   <extension
+         point="org.eclipse.cdt.core.templateProcessTypes">
+      <processType
+            name="CopyFolders"
+            processRunner="com.sevenwatt.picos.templates.process.CopyFolders">
+         <simple name="projectName"/>
+         <complexArray name="folders">
+            <baseType>
+               <simple name="source"/>
+               <simple name="target"/>
+               <simple name="pattern"/>
+               <simple name="replaceable"/>
+            </baseType>
+         </complexArray>
+      </processType>
+   </extension>
+   <extension
+         point="org.eclipse.cdt.core.templateAssociations">
+      <template
+            id="com.sevenwatt.templates.LPC8xxHelloWorld">
+         <toolChain
+               id="nonexistentChain.ForcesNoToolChain.Only">
+         </toolChain>
+      </template>
+      <template
+            id="com.sevenwatt.templates.LPC8xxMulti">
+         <toolChain
+               id="nonexistentChain.ForcesNoToolChain.Only">
+         </toolChain>
+      </template>
+   </extension>
+</plugin>
