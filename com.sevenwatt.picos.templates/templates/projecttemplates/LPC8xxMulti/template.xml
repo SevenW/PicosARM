@@ -43,7 +43,7 @@
 			description="%LPC8xxMulti.embelloLib.description" type="browsedir" mandatory="false"
 			default="%LPC8xxMulti.embelloLib.default" persist="false" hidden="false" />
 		<property id="toolchain" label="%LPC8xxMulti.toolchain.label"
-			description="%LPC8xxMulti.toolchain.description" type="browsedir" pattern="[\-:_a-zA-Z0-9\\\.@/\s]+" 
+			description="%LPC8xxMulti.toolchain.description" type="browsedir" 
 			mandatory="false" default="%LPC8xxMulti.toolchain.default" persist="false" />
 	</property-group>
 
@@ -145,7 +145,7 @@
 				<simple name="id"
 					value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
 				<simple-array name="values">
-					<element value="&quot;$(toolchain)/include/&quot;" />
+					<element value="&quot;$(toolchain)/&quot;" />
 				</simple-array>
 				<simple name="path" value="" />
 			</element>

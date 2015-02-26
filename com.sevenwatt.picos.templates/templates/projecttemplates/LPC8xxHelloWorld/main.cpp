@@ -1,5 +1,8 @@
 // Demonstrate printf over the serial port.
 // and blink by periodically sending a message to the serial port.
+// Name        : $(baseName).cpp
+// Author      : $(author)
+// Copyright   : $(copyright)
 // See http://jeelabs.org/2014/12/10/dips-into-the-lpc810/
 // See http://jeelabs.org/2014/12/03/garage-parking-aid/
 

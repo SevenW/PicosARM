@@ -19,6 +19,7 @@ public class Messages extends NLS {
 	public static String ConfigHandler_MakePattern;
 	public static String ConfigHandler_Mkdir_exe;
 	public static String ConfigHandler_Search;
+	public static String ConfigHandler_Std_Includes;
 	public static String ConfigHandler_UtilsPattern;
 	static {
 		// initialize resource bundle

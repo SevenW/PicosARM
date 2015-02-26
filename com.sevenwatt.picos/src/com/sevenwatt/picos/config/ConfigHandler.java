@@ -160,6 +160,7 @@ public class ConfigHandler extends AbstractHandler {
 			environment.createVariable("PICOS_BUILDTOOL", cfgDialog.getBuildTools()); //$NON-NLS-1$
 			environment.createVariable("PICOS_TOOLCHAIN", cfgDialog.getToolchain()); //$NON-NLS-1$
 			environment.createVariable("PICOS_GNU_UTILS", cfgDialog.getGNUUtils()); //$NON-NLS-1$
+			environment.createVariable("PICOS_STDINCLUDE", cfgDialog.getToolchain()+Messages.ConfigHandler_Std_Includes); //$NON-NLS-1$
 			String path = "${PICOS_BUILDTOOL}"+ SEPARATOR + "${PICOS_TOOLCHAIN}"+ SEPARATOR + "${PICOS_GNU_UTILS}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			environment.createVariable("PATH", path); //$NON-NLS-1$
 			////KEEP: Only with ENVVAR_APPEND, %PATH% gets expanded. Kept as example.
