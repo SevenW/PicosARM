@@ -31,6 +31,16 @@
             </baseType>
          </complexArray>
       </processType>
+      <processType
+            name="CopyMakeFile"
+            processRunner="com.sevenwatt.picos.templates.process.CopyMakeFile">
+         <simple name="projectName"/>
+         <complex name="file">
+               <simple name="source"/>
+               <simple name="target"/>
+               <simple name="replaceable"/>
+         </complex>
+      </processType>
    </extension>
    <extension
          point="org.eclipse.cdt.core.templateAssociations">
