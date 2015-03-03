@@ -26,9 +26,9 @@
 
 	<property-group id="advanced" label="%LPC8xxHello.advanced.label"
 		description="%LPC8xxHello.advanced.description" type="PAGES-ONLY" help="help.html">
-		<property id="toolchain" label="%LPC8xxHello.toolchain.label"
-			description="%LPC8xxHello.toolchain.description" type="browsedir" 
-			mandatory="false" default="%LPC8xxHello.toolchain.default" persist="false"
+		<property id="stdincludes" label="%LPC8xxHello.stdincludes.label"
+			description="%LPC8xxHello.stdincludes.description" type="browsedir" 
+			mandatory="false" default="%LPC8xxHello.stdincludes.default" persist="false"
 			hidden = "true" />
 	</property-group>
 
@@ -84,7 +84,7 @@
 				<simple name="id"
 					value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
 				<simple-array name="values">
-					<element value="&quot;$(toolchain)/&quot;" />
+					<element value="&quot;$(stdincludes)/&quot;" />
 				</simple-array>
 				<simple name="path" value="" />
 			</element>

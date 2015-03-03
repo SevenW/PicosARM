@@ -93,7 +93,7 @@ int main () {
     //rf.encrypt("mysecret");
     rf.txPower(0); // 0 = min .. 31 = max
 
-    uint16_t seq = 0, cnt = 0;
+    uint16_t cnt = 0;
 
     while (true) {
         if (++cnt == 0) {

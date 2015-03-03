@@ -48,7 +48,6 @@ public class CopyFolders extends ProcessRunner {
 	/**
 	 * This method Adds the list of Files to the corresponding Project.
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public void process(TemplateCore template_par, ProcessArgument[] args,
 			String procId, IProgressMonitor monitor)
@@ -97,6 +96,7 @@ public class CopyFolders extends ProcessRunner {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void CopyFolder(String folderSourcePath, String folderTargetPath,
 			String pattern, boolean replaceable) throws ProcessFailureException {
 		String startPattern = null;
@@ -148,10 +148,8 @@ public class CopyFolders extends ProcessRunner {
 
 					URL sourceURL;
 					try {
-						sourceURL = child.toURL(); // using .toURI().toURL()
-						// fails,
-						// due to
-						// spaces substitution
+						// using .toURI().toURL() fails,due to spaces substitution
+						sourceURL = child.toURL(); 
 
 					} catch (MalformedURLException e2) {
 						throw new ProcessFailureException(

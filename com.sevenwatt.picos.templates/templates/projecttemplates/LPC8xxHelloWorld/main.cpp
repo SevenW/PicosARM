@@ -26,8 +26,8 @@ int main () {
 
     // send out a greeting every second
     while (true) {
-        printf("$(message)\n", LPC_SYSCON->DEVICE_ID>>4);
-        printf("Built for $(LPCType). Running on LPC%03x.\n", LPC_SYSCON->DEVICE_ID>>4);
+        printf("$(message)\n");
+        printf("Built for $(LPCType). Running on LPC%03x.\n", (unsigned int)LPC_SYSCON->DEVICE_ID>>4);
         delay(1000);
     }
 

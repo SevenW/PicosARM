@@ -11,6 +11,11 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 
+import org.eclipse.cdt.core.CCorePlugin;
+import org.eclipse.cdt.core.cdtvariables.ICdtVariable;
+import org.eclipse.cdt.core.cdtvariables.ICdtVariableManager;
+import org.eclipse.cdt.core.cdtvariables.IStorableCdtVariables;
+import org.eclipse.cdt.core.cdtvariables.IUserVarSupplier;
 import org.eclipse.cdt.core.envvar.IEnvironmentVariable;
 import org.eclipse.cdt.core.settings.model.ICConfigurationDescription;
 import org.eclipse.cdt.internal.core.envvar.EnvironmentVariableManager;
@@ -19,6 +24,7 @@ import org.eclipse.cdt.utils.envvar.StorableEnvironment;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -34,6 +40,9 @@ public class ConfigHandler extends AbstractHandler {
 	private static final String DIRSEP = "/"; //$NON-NLS-1$
 	private static final UserDefinedEnvironmentSupplier fUserSupplier = EnvironmentVariableManager.fUserSupplier;
 
+	//private static final ICdtVariableManager vmgr = CCorePlugin.getDefault().getCdtVariableManager();
+	private static final IUserVarSupplier fUserSup = CCorePlugin.getUserVarSupplier();	
+	
 	private String fastSearchPaths = Messages.ConfigHandler_fastSearch;
 	private String searchPaths = Messages.ConfigHandler_Search;
 	//private String defPatternMake = "C:/*/GNU ARM Eclipse/Build Tools/bin";
@@ -139,6 +148,9 @@ public class ConfigHandler extends AbstractHandler {
 		//https://www.eclipse.org/forums/index.php/t/812519/
 		UserDefinedEnvironmentSupplier fUserSupplier = EnvironmentVariableManager.fUserSupplier;
 		StorableEnvironment environment = fUserSupplier.getWorkspaceEnvironmentCopy();
+		
+		IStorableCdtVariables prefvars = fUserSup.getWorkspaceVariablesCopy();
+		
 		IEnvironmentVariable envvar = environment.getVariable("PICOS_BUILDTOOL"); //$NON-NLS-1$
 		if (envvar != null)
 			cfgDialog.setBuildTools(envvar.getValue());
@@ -157,15 +169,28 @@ public class ConfigHandler extends AbstractHandler {
 		cfgDialog.create();
 		if (cfgDialog.open() == Window.OK) {
 			// Add variable to workspace
-			environment.createVariable("PICOS_BUILDTOOL", cfgDialog.getBuildTools()); //$NON-NLS-1$
-			environment.createVariable("PICOS_TOOLCHAIN", cfgDialog.getToolchain()); //$NON-NLS-1$
-			environment.createVariable("PICOS_GNU_UTILS", cfgDialog.getGNUUtils()); //$NON-NLS-1$
-			environment.createVariable("PICOS_STDINCLUDE", cfgDialog.getToolchain()+Messages.ConfigHandler_Std_Includes); //$NON-NLS-1$
-			String path = "${PICOS_BUILDTOOL}"+ SEPARATOR + "${PICOS_TOOLCHAIN}"+ SEPARATOR + "${PICOS_GNU_UTILS}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			prefvars.createMacro("picosToolchain", ICdtVariable.VALUE_PATH_DIR, cfgDialog.getToolchain());
+			prefvars.createMacro("picosStdInc", ICdtVariable.VALUE_PATH_DIR, cfgDialog.getToolchain()+Messages.ConfigHandler_Std_Includes);
+			prefvars.createMacro("picosBuildtool", ICdtVariable.VALUE_PATH_DIR, cfgDialog.getBuildTools());
+			prefvars.createMacro("picosGnuUtils", ICdtVariable.VALUE_PATH_DIR, cfgDialog.getGNUUtils());
+			try {
+				fUserSup.setWorkspaceVariables(prefvars);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+			
+			//environment.createVariable("PICOS_BUILDTOOL", cfgDialog.getBuildTools()); //$NON-NLS-1$
+			//environment.createVariable("PICOS_TOOLCHAIN", cfgDialog.getToolchain()); //$NON-NLS-1$
+			//environment.createVariable("PICOS_GNU_UTILS", cfgDialog.getGNUUtils()); //$NON-NLS-1$
+			//environment.createVariable("PICOS_STDINCLUDE", cfgDialog.getToolchain()+Messages.ConfigHandler_Std_Includes); //$NON-NLS-1$
+			//String path = "${PICOS_BUILDTOOL}"+ SEPARATOR + "${PICOS_TOOLCHAIN}"+ SEPARATOR + "${PICOS_GNU_UTILS}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			String path = "${picosBuildtool}"+ SEPARATOR + "${picosToolchain}"+ SEPARATOR + "${picosGnuUtils}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			environment.createVariable("PATH", path); //$NON-NLS-1$
 			////KEEP: Only with ENVVAR_APPEND, %PATH% gets expanded. Kept as example.
 			//environment.createVariable("PATH", "${PICOS_BUILDTOOL};%PATH%", IEnvironmentVariable.ENVVAR_APPEND, SEPARATOR);
 			fUserSupplier.setWorkspaceEnvironment(environment);
+			
+			
 		} 
 		return null;
 	}
