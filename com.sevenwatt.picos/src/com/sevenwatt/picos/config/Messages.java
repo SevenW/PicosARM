@@ -10,16 +10,24 @@ public class Messages extends NLS {
 	public static String ConfigDialog_Title;
 	public static String ConfigDialog_Toolchain;
 	public static String ConfigHandler_ChainPattern;
+	public static String ConfigHandler_CmdOptPost;
 	public static String ConfigHandler_Compiler_exe;
 	public static String ConfigHandler_DefaultChain;
 	public static String ConfigHandler_DefaultMake;
 	public static String ConfigHandler_DefaultUtils;
+	public static String ConfigHandler_LPC810;
 	public static String ConfigHandler_fastSearch;
+	public static String ConfigHandler_LPC812;
+	public static String ConfigHandler_LPC824;
 	public static String ConfigHandler_Make_exe;
 	public static String ConfigHandler_MakePattern;
 	public static String ConfigHandler_Mkdir_exe;
+	public static String ConfigHandler_CmdOptPre;
+	public static String ConfigHandler_OpenOCDPath;
 	public static String ConfigHandler_Search;
+	public static String ConfigHandler_SharedProject;
 	public static String ConfigHandler_Std_Includes;
+	public static String ConfigHandler_ToolNamePre;
 	public static String ConfigHandler_UtilsPattern;
 	static {
 		// initialize resource bundle
