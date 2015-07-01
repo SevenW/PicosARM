@@ -5,7 +5,7 @@ LINKWITH = GCC
 #LINKWITH = LD
 
 ARCHDIR = $(LIBDIR)/arch-$(ARCH)
-INCLUDES = -I$(ARCHDIR) -I$(SHARED) -I$(LIBDIR)/driver -I$(LIBDIR)/util -I$(LIBDIR)/vendor
+INCLUDES = -I$(ARCHDIR) -I$(SHARED) -I$(LIBDIR)/driver -I$(LIBDIR)/util -I$(LIBDIR)/vendor -I$(LIBDIR)/vendor/lpcopen/inc
 
 # Output directory and files
 BUILDDIR = build
@@ -56,7 +56,7 @@ TTY ?= /dev/tty.usbserial-*
 endif
 
 .PHONY: all clean isp
-  
+
 all: $(OUTFILES)
 
 $(BUILDDIR) $(OBJDIR):
@@ -64,12 +64,12 @@ $(BUILDDIR) $(OBJDIR):
 	echo $(LINKWITH)
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $< 
-	
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $< 
-	
-$(OBJCTS): | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJCTS): | $(OBJDIR)
 
 ifeq ($(LINKWITH), GCC)
 %.elf: $(OBJCTS)
@@ -86,7 +86,7 @@ clean:
 
 # this works with NXP LPC's, using serial ISP
 isp: $(BUILDDIR)/firmware.bin
-	uploader $(ISPOPTS) $(TTY) $^ #$(BUILDDIR)/firmware.bin
+	uploader $(ISPOPTS) $(TTY) $^
 
 %.bin: %.elf
 	@$(OBJCOPY) --strip-unneeded -O binary $^ $@
@@ -95,4 +95,3 @@ isp: $(BUILDDIR)/firmware.bin
 	@$(OBJCOPY) --strip-unneeded -O ihex $^ $@
 
 -include $(OBJCTS:.o=.d)
-

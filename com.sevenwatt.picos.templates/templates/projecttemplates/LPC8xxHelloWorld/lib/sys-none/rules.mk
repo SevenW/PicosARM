@@ -4,7 +4,8 @@
 LINKWITH = GCC
 #LINKWITH = LD
 
-INCLUDES = -I$(SHARED)
+ARCHDIR = $(LIBDIR)/arch-$(ARCH)
+INCLUDES = -I$(ARCHDIR) -I$(SHARED) -I$(LIBDIR)/driver -I$(LIBDIR)/util -I$(LIBDIR)/vendor -I$(LIBDIR)/vendor/lpcopen/inc
 
 # Output directory and files
 BUILDDIR = build
@@ -13,7 +14,7 @@ OUTFILES = $(BUILDDIR)/firmware.elf \
            $(BUILDDIR)/firmware.bin
 OBJDIR    = $(BUILDDIR)/obj
 
-VPATH = $(SHARED)
+VPATH = $(ARCHDIR):$(SHARED):$(LIBDIR)/util:$(LIBDIR)/vendor
 
 CROSS = arm-none-eabi-
 CPU = -mthumb -mcpu=cortex-m0plus
@@ -37,7 +38,7 @@ CXXFLAGS += $(CPU) $(WARN) -MMD $(INCLUDES) \
 CXXFLAGS += -fno-rtti -fno-exceptions
 
 ifeq ($(LINKWITH), GCC)
-LDFLAGS += -Wl,--script=$(SHARED)/$(LINK) -Wl,--gc-sections -nostartfiles -L$(SHARED)
+LDFLAGS += -Wl,--script=$(ARCHDIR)/$(LINK) -Wl,--gc-sections -nostartfiles -L$(SHARED)
 else
 LDFLAGS += --gc-sections --library-path=$(SHARED)
 endif
@@ -55,7 +56,7 @@ TTY ?= /dev/tty.usbserial-*
 endif
 
 .PHONY: all clean isp
-  
+
 all: $(OUTFILES)
 
 $(BUILDDIR) $(OBJDIR):
@@ -63,12 +64,12 @@ $(BUILDDIR) $(OBJDIR):
 	echo $(LINKWITH)
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $< 
-	
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $< 
-	
-$(OBJCTS): | $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJCTS): | $(OBJDIR)
 
 ifeq ($(LINKWITH), GCC)
 %.elf: $(OBJCTS)
@@ -76,7 +77,7 @@ ifeq ($(LINKWITH), GCC)
 	$(SIZE) $@
 else
 %.elf: $(OBJCTS)
-	$(LD) -o $@ $(LDFLAGS) -T $(SHARED)/$(LINK) $(OBJCTS) $(LIBGCC)
+	$(LD) -o $@ $(LDFLAGS) -T $(ARCHDIR)/$(LINK) $(OBJCTS) $(LIBGCC)
 	$(SIZE) $@
 endif
 
@@ -85,7 +86,7 @@ clean:
 
 # this works with NXP LPC's, using serial ISP
 isp: $(BUILDDIR)/firmware.bin
-	uploader $(ISPOPTS) $(TTY) $^ #$(BUILDDIR)/firmware.bin
+	uploader $(ISPOPTS) $(TTY) $^
 
 %.bin: %.elf
 	@$(OBJCOPY) --strip-unneeded -O binary $^ $@
@@ -94,4 +95,3 @@ isp: $(BUILDDIR)/firmware.bin
 	@$(OBJCOPY) --strip-unneeded -O ihex $^ $@
 
 -include $(OBJCTS:.o=.d)
-

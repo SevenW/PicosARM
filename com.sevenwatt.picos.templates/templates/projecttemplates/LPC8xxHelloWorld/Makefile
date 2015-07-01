@@ -1,10 +1,12 @@
-#CFLAGS += -DSTARTUP_NO_IRQS
-ISPOPTS += -term
-LINK = {{LPCType}}.ld
+CFLAGS += -DCORE_M0PLUS
+CXXFLAGS += -DCORE_M0PLUS -I.
+ISPOPTS += -s
+LINK = {{LPCType}}.ld #LPC810.ld | LPC812.ld | LPC824.ld Defines memory layoutARCH = lpc8xx
+ARCH = lpc8xx
 
 OBJS = {{baseName}}.o system_LPC8xx.o gcc_startup_lpc8xx.o \
 		uart.o printf.o printf-retarget.o
 
-LIBDIR = common
-SHARED = $(LIBDIR)
+LIBDIR = lib
+SHARED = $(LIBDIR)/sys-none
 include $(SHARED)/rules.mk
