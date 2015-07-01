@@ -91,52 +91,6 @@
 		</complex-array>
 	</process>
 
-	<process
-		type="org.eclipse.cdt.managedbuilder.core.AppendToMBSStringListOptionValues">
-		<simple name="projectName" value="$(projectName)" />
-		<complex-array name="resourcePaths">
-			<element>
-				<simple name="id"
-					value="org.eclipse.cdt.build.core.settings.holder.incpaths" />
-				<simple-array name="values">
-									<element
-						value="&quot;${project_loc:/lib/arch-lpc8xx}&quot;" />
-					<element value="&quot;${workspace_loc:/$(embelloProj)/lib/driver}&quot;" />
-					<element
-						value="&quot;${project_loc:/lib/sys-none}&quot;" />
-					<element value="&quot;${project_loc:/lib/util}&quot;" />
-					<element value="&quot;${project_loc:/lib/vendor}&quot;" />
-					<element
-						value="&quot;${project_loc:/lib/vendor/lpcopen/inc}&quot;" />
-					<element
-						value="&quot;${project_loc:/lib/vendor/lpcopen/src}&quot;" />
-				
-				
-					<!-- When using an external (include/source) library: -->
-					<!-- <element value="&quot;C:\Github\embello\lib&quot;" /> -->
-		<!--  		<element
-						value="&quot;${workspace_loc:/$(embelloProj)/lib/arch-lpc8xx}&quot;" />
-					<element value="&quot;${workspace_loc:/$(embelloProj)/lib/driver}&quot;" />
-					<element
-						value="&quot;${workspace_loc:/$(embelloProj)/lib/sys-none}&quot;" />
-					<element value="&quot;${workspace_loc:/$(embelloProj)/lib/util}&quot;" />
-					<element value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor}&quot;" />
-					<element
-						value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor/lpcopen/inc}&quot;" />
-					<element
-						value="&quot;${workspace_loc:/$(embelloProj)/lib/vendor/lpcopen/src}&quot;" />
-						-->
-					<!-- Path to (include/source) library is not required when in same 
-						project -->
-					<!-- Does not work within project -->
-					<!-- <element value="$(projectName)/lib/driver" /> <element value="/lib/driver" 
-						/> <element value="./lib/util" /> -->
-				</simple-array>
-				<simple name="path" value="" />
-			</element>
-		</complex-array>
-	</process>
-
 	<process type="org.eclipse.cdt.ui.OpenFiles">
 		<simple name="projectName" value="$(projectName)" />
 		<complex-array name="files">
